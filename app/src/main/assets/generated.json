@@ -1,0 +1,50 @@
+[
+  {
+    "name": "薯條",
+    "sell": false,
+    "count": 0,
+    "type": "potato",
+    "genre": "MainFood",
+    "genreC": "主餐:"
+  },
+  {
+    "name": "雞塊",
+    "sell": false,
+    "count": 0,
+    "type": "chicken",
+    "genre": "MainFood",
+    "genreC": "主餐:"
+  },
+  {
+    "name": "洋蔥圈",
+    "sell": false,
+    "count": 2,
+    "type": "onion",
+    "genre": "SideFood",
+    "genreC": "附餐:"
+  },
+  {
+    "name": "甜甜圈",
+    "sell": false,
+    "count": 1,
+    "type": "donut",
+    "genre": "SideFood",
+    "genreC": "附餐:"
+  },
+  {
+    "name": "蛋塔",
+    "sell": false,
+    "count": 3,
+    "type": "tart",
+    "genre": "Dessert",
+    "genreC": "點心:"
+  },
+  {
+    "name": "甜筒",
+    "sell": false,
+    "count": 0,
+    "type": "ice",
+    "genre": "Dessert",
+    "genreC": "點心:"
+  }
+]

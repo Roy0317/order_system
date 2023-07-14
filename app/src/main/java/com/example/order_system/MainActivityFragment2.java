@@ -16,6 +16,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +31,7 @@ public class MainActivityFragment2 extends Fragment {
 
     private SharedPreferences sharedPreferences;
     private static final String SHARED_PREFS_KEY = "click";
-    private MainFood p = new MainFood("potato", true);
-    private MainFood c = new MainFood("chicken", true);
-    private SideFood o = new SideFood("onion", true);
-    private SideFood d = new SideFood("donut", true);
-    private Dessert t = new Dessert("tart", true);
-    private Dessert ii = new Dessert("ice", true);
-
+    private List<Commodity2> commodity2;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,10 +48,14 @@ public class MainActivityFragment2 extends Fragment {
         String clickIce = sharedPreferences.getString("ICE_KEY", null);
         String[] click={clickPotato,clickChicken,clickOnion,clickDonut,clickTart,clickIce};
 
-        for (int i=0;i<click.length;i++){
+        JsonHelper jsonHelper = new JsonHelper();
+        commodity2 = jsonHelper.jsonget(getActivity().getApplication());
+
+        for (int i=0;i<commodity2.size();i++){
             textViews[i]=view.findViewById(textViewIds[i]);
-            up(textViews, i);
+            up(textViews,i);
         }
+
         for (int i=0;i<click.length;i++){
             if(click[i]!=null){
                 textViews[i].setText("已上架");
@@ -66,6 +72,7 @@ public class MainActivityFragment2 extends Fragment {
 
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putString(foodName.toUpperCase()+"_KEY",foodName);
+        Log.d("TGG", "handleFoodClick: "+foodName.toUpperCase());
         editor.apply();
 
         if(k==true){
@@ -74,28 +81,21 @@ public class MainActivityFragment2 extends Fragment {
         }
     }
     private void up(TextView[] textViews,int num){
-        List<Commodity> commodityList =new ArrayList<>();
-        commodityList.add(p);
-        commodityList.add(c);
-        commodityList.add(o);
-        commodityList.add(d);
-        commodityList.add(t);
-        commodityList.add(ii);
         textViews[num].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (commodityList.get(num) instanceof MainFood){
-                    String name=(commodityList.get(num)).name;
-                    MainFood mainFood=new MainFood(name,true);
-                    handleFoodClick(name,textViews[num],mainFood.getPut());
-                }else if (commodityList.get(num) instanceof SideFood){
-                    String name=(commodityList.get(num)).name;
-                    SideFood sideFood=new SideFood(name,true);
-                    handleFoodClick(name,textViews[num],sideFood.getPut());
-                } else if (commodityList.get(num) instanceof Dessert) {
-                    String name=(commodityList.get(num)).name;
-                    Dessert dessert=new Dessert(name,true);
-                    handleFoodClick(name,textViews[num],dessert.getPut());
+                if (commodity2.get(num).genre.equals("MainFood")){
+                    String name=commodity2.get(num).type;
+                    commodity2.get(num).setSell(true);
+                    handleFoodClick(name,textViews[num],commodity2.get(num).sell);
+                }else if (commodity2.get(num).genre.equals("SideFood")){
+                    String name=commodity2.get(num).type;
+                    commodity2.get(num).setSell(true);
+                    handleFoodClick(name,textViews[num],commodity2.get(num).sell);
+                } else if (commodity2.get(num).genre.equals("Dessert")) {
+                    String name=commodity2.get(num).type;
+                    commodity2.get(num).setSell(true);
+                    handleFoodClick(name,textViews[num],commodity2.get(num).sell);
                 }
             }
         });

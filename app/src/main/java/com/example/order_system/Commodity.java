@@ -3,10 +3,16 @@ package com.example.order_system;
 public class Commodity {
     String name;
     Boolean put;
-
+    int count;
+    String type;
     public Commodity(String name, Boolean put) {
         this.name = name;
         this.put = put;
+    }
+
+    public Commodity(String name, int currentCount){
+        this.name=name;
+        count = currentCount;
     }
 
     public String getName() {
@@ -17,6 +23,13 @@ public class Commodity {
         return put;
     }
 
+    public String getType(){
+        return type;
+    }
+
+    public void setCount(int count){
+        this.count=count;
+    }
 
 }
 class MainFood extends Commodity{

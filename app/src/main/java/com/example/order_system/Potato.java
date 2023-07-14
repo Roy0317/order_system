@@ -32,8 +32,7 @@ public class Potato extends Fragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickCount++;
-
+                    clickCount++;
                     String potato="薯條";
                     Intent intent = new Intent("com.example.order_system.POTATO_SELECTED1");
                     intent.putExtra("potato", potato);

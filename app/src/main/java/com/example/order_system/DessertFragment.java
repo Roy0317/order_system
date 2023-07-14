@@ -17,10 +17,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.List;
+
 public class DessertFragment extends Fragment {
     private static final String SHARED_PREFS_KEY = "FragmentData";
     private SharedPreferences sharedPreferences;
-
+    private List<Commodity2> commodity2;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View view=inflater.inflate(R.layout.dessert_fragment,container,false);
@@ -38,20 +40,19 @@ public class DessertFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
 
+        JsonHelper jsonHelper = new JsonHelper();
+        commodity2 = jsonHelper.jsonget(getActivity().getApplication());
+
+        sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
         String savedTart = sharedPreferences.getString("TART_KEY", null);
         String savedIce = sharedPreferences.getString("ICE_KEY", null);
 
         if (savedTart != null) {
-            // 創建 Tart Fragment
-            Dessert dessert=new Dessert("tart",true);
-            createFoodFragment1(dessert, R.id.frameLayout15);
+            createFoodFragment(commodity2.get(4),R.id.frameLayout15);
         }
         if (savedIce != null) {
-            // 創建 Ice Fragment
-            Dessert dessert=new Dessert("ice",true);
-            createFoodFragment1(dessert, R.id.frameLayout16);
+            createFoodFragment(commodity2.get(5),R.id.frameLayout16);
         }
     }
 
@@ -70,55 +71,39 @@ public class DessertFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if ("com.example.ACTION_TART".equals(intent.getAction())) {
-                String tarts = intent.getStringExtra("tart");
-                if (tarts.equals("tart")) {
-                    Dessert dessert=new Dessert("tart",true);
-                    createFoodFragment(dessert, R.id.frameLayout15);
+                if (commodity2.get(4).type.equals(intent.getStringExtra("tart"))) {
+                    createFoodFragment(commodity2.get(4), R.id.frameLayout15);
+                    text(commodity2.get(4));
                 }
             }
             if ("com.example.ACTION_ICE".equals(intent.getAction())) {
-                String ices = intent.getStringExtra("ice");
-                if (ices.equals("ice")) {
-                    Dessert dessert=new Dessert("ice",true);
-                    createFoodFragment(dessert, R.id.frameLayout16);
+                if (commodity2.get(5).type.equals(intent.getStringExtra("ice"))) {
+                    createFoodFragment(commodity2.get(5), R.id.frameLayout16);
+                    text(commodity2.get(5));
                 }
             }
         }
     };
-    private void createFoodFragment(Commodity food, int frameLayoutId) {
+    private void createFoodFragment(Commodity2 commodity2, int frameLayoutId) {
         // 創建對應的 Fragment
         Fragment fragment = null;
-        if(food.getName().equals("tart")){
+        if(commodity2.getType().equals("tart")){
             fragment = new Tart();
-        } else if (food.getName().equals("ice")) {
+        } else if (commodity2.getType().equals("ice")) {
             fragment = new Ice();
         }
-        // 保存食物數據到 SharedPreferences
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(food.getName().toUpperCase() + "_KEY", food.getName());
-        editor.apply();
         // 動態添加 Fragment
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(frameLayoutId, fragment);
         fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
-
+    }
+    private void text(Commodity2 commodity2){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(commodity2.type.toUpperCase() + "_KEY", commodity2.getType());
+        editor.apply();
         TextView textView = getView().findViewById(R.id.textView4);
         textView.setVisibility(View.GONE);
-    }
-    private void createFoodFragment1(Commodity food,int frameLayoutId) {
-        Fragment fragment = null;
-        if(food.getName().equals("tart")){
-            fragment = new Tart();
-        } else if (food.getName().equals("ice")) {
-            fragment = new Ice();
-        }
-
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(frameLayoutId, fragment);
-        fragmentTransaction.show(fragment);
-        fragmentTransaction.commit();
     }
 }

@@ -5,25 +5,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ShoppingCart extends AppCompatActivity {
-    private MainFood p = null;
-    private MainFood c = null;
-    private SideFood o = null;
-    private SideFood d = null;
-    private Dessert t = null;
-    private Dessert i= null;
+import java.util.List;
 
+public class ShoppingCart extends AppCompatActivity {
+    private List<Commodity2> commodity2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_cart);
         Button button=findViewById(R.id.button);
         TextView textView=findViewById(R.id.textView);
+
+        JsonHelper jsonHelper = new JsonHelper();
+        commodity2 = jsonHelper.jsonget(getApplication());
 
         ImageView[] imageViews = new ImageView[6];
         int[] imageViewIds = {R.id.image1, R.id.image2, R.id.image3, R.id.image4, R.id.image5, R.id.image6};
@@ -36,24 +36,15 @@ public class ShoppingCart extends AppCompatActivity {
         int tartCount = intent.getIntExtra("tartCount", 0);
         int iceCount = intent.getIntExtra("iceCount", 0);
 
-        p = new MainFood("薯條", potatoCount);
-        c = new MainFood("雞塊", chickenCount);
-        o = new SideFood("洋蔥圈", onionCount);
-        d = new SideFood("甜甜圈", donutCount);
-        t = new Dessert("蛋塔", tartCount);
-        i = new Dessert("甜筒", iceCount);
-
-
-        String[] selected={"主餐:"+p.name,"主餐:"+c.name,"附餐:"+o.name,"附餐:"+d.name,"點心:"+t.name,"點心:"+i.name};
-        int[] count={p.count,c.count,o.count,d.count,t.count,i.count};
+        int[] count={potatoCount,chickenCount,onionCount,donutCount,tartCount,iceCount};
         int[] imageArray = {R.drawable.potato, R.drawable.chicken, R.drawable.onion, R.drawable.donut, R.drawable.eggtart, R.drawable.ice};
         String message = "";
-        for (int i=0;i<selected.length;i++){
+        for (int i=0;i<commodity2.size();i++){
             imageViews[i]=findViewById(imageViewIds[i]);
         }
-        for(int i=0;i<selected.length;i++){
+        for(int i=0;i<commodity2.size();i++){
             if (count[i]!=0){
-             message += selected[i] + "，數量" + count[i] + "\n"+"\n"+"\n"+"\n";
+             message += commodity2.get(i).genreC+ commodity2.get(i).name + "，數量" + count[i] + "\n"+"\n"+"\n"+"\n";
              Drawable drawable=getResources().getDrawable(imageArray[i]);
              imageViews[i].setImageDrawable(drawable);
             }

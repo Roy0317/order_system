@@ -18,9 +18,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.List;
+
 public class MainCourseFragment extends Fragment {
     private static final String SHARED_PREFS_KEY = "FragmentData";
     private SharedPreferences sharedPreferences;
+    private List<Commodity2> commodity2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -28,6 +31,9 @@ public class MainCourseFragment extends Fragment {
         TextView textView=view.findViewById(R.id.textView2);
         String savedPotato = sharedPreferences.getString("POTATO_KEY", null);
         String savedChicken = sharedPreferences.getString("CHICKEN_KEY", null);
+
+
+
         if(savedPotato!=null){
             textView.setVisibility(View.GONE);
         }else if(savedChicken!=null){
@@ -40,18 +46,19 @@ public class MainCourseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
 
+        JsonHelper jsonHelper = new JsonHelper();
+        commodity2 = jsonHelper.jsonget(getActivity().getApplication());
+
+        sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
         String savedPotato = sharedPreferences.getString("POTATO_KEY", null);
         String savedChicken = sharedPreferences.getString("CHICKEN_KEY", null);
 
         if (savedPotato != null) {
-            MainFood mainFood=new MainFood("potato",true);
-            createFoodFragment1(mainFood, R.id.frameLayout11);
+            createFoodFragment(commodity2.get(0), R.id.frameLayout11);
         }
         if (savedChicken != null) {
-            MainFood mainFood=new MainFood("chicken",true);
-            createFoodFragment1(mainFood, R.id.frameLayout12);
+            createFoodFragment(commodity2.get(1), R.id.frameLayout12);
         }
     }
 
@@ -68,33 +75,27 @@ public class MainCourseFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if ("com.example.ACTION_POTATO".equals(intent.getAction())) {
-                String potatos = intent.getStringExtra("potato");
-                if (potatos.equals("potato")) {
-                    MainFood mainFood=new MainFood("potato",true);
-                    createFoodFragment(mainFood, R.id.frameLayout11);
+                if (commodity2.get(0).type.equals(intent.getStringExtra("potato"))) {
+                    createFoodFragment(commodity2.get(0), R.id.frameLayout11);
+                    text(commodity2.get(0));
                 }
             }
             if ("com.example.ACTION_CHICKEN".equals(intent.getAction())) {
-                String chickens = intent.getStringExtra("chicken");
-                if (chickens.equals("chicken")) {
-                    MainFood mainFood=new MainFood("chicken",true);
-                    createFoodFragment(mainFood, R.id.frameLayout12);
+                if (commodity2.get(1).type.equals(intent.getStringExtra("chicken"))) {
+                    createFoodFragment(commodity2.get(1), R.id.frameLayout12);
+                    text(commodity2.get(1));
                 }
             }
         }
     };
-    private void createFoodFragment(Commodity food, int frameLayoutId) {
+    private void createFoodFragment(Commodity2 commodity2, int frameLayoutId) {
             // 創建對應的 Fragment
             Fragment fragment = null;
-            if(food.getName().equals("potato")){
+            if(commodity2.type.equals("potato")){
                 fragment = new Potato();
-            } else if (food.getName().equals("chicken")) {
+            } else if (commodity2.type.equals("chicken")) {
                 fragment = new Chicken();
             }
-            // 保存食物數據到 SharedPreferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(food.getName().toUpperCase() + "_KEY", food.getName());
-            editor.apply();
             // 動態添加 Fragment
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -102,21 +103,12 @@ public class MainCourseFragment extends Fragment {
             fragmentTransaction.show(fragment);
             fragmentTransaction.commit();
 
-            TextView textView = getView().findViewById(R.id.textView2);
-            textView.setVisibility(View.GONE);
     }
-    private void createFoodFragment1(Commodity food,int frameLayoutId) {
-        Fragment fragment = null;
-        if(food.getName().equals("potato")){
-            fragment = new Potato();
-        } else if (food.getName().equals("chicken")) {
-            fragment = new Chicken();
-        }
-
-        FragmentManager fragmentManager = getChildFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(frameLayoutId, fragment);
-        fragmentTransaction.show(fragment);
-        fragmentTransaction.commit();
+    private void text(Commodity2 commodity2){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(commodity2.type.toUpperCase() + "_KEY", commodity2.getType());
+        editor.apply();
+        TextView textView = getView().findViewById(R.id.textView2);
+        textView.setVisibility(View.GONE);
     }
 }
