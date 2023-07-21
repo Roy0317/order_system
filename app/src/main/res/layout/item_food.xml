@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/frameLayout3"
+    android:layout_width="206dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/imageFood"
+        android:layout_width="match_parent"
+        android:layout_height="113dp"
+        android:src="@drawable/potato" />
+    <TextView
+        android:id="@+id/textFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="112dp"
+        android:layout_marginLeft="90dp"
+        android:text="薯條">
+    </TextView>
+    <TextView
+        android:id="@+id/textCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="放入購物車"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="130dp"
+        android:layout_marginLeft="70dp">
+    </TextView>
+</FrameLayout>

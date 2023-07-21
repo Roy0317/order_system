@@ -19,6 +19,7 @@ public class Commodity2 {
     String type;
     String genre;
     String genreC;
+    String image;
     public Commodity2(String name, Boolean sell) {
         this.name = name;
         this.sell = sell;
@@ -27,6 +28,15 @@ public class Commodity2 {
     public Commodity2(String name, int currentCount){
         this.name=name;
         count = currentCount;
+    }
+
+    public Commodity2(String name, Boolean sell, int count, String type, String genre, String genreC) {
+        this.name = name;
+        this.sell = sell;
+        this.count = count;
+        this.type = type;
+        this.genre = genre;
+        this.genreC = genreC;
     }
 
     public String getName() {
@@ -52,6 +62,13 @@ public class Commodity2 {
     }
     public String getGenreC(){
         return genreC;
+    }
+
+    public int getCount() {
+        return count;
+    }
+    public String getImage(){
+        return image;
     }
 }
 

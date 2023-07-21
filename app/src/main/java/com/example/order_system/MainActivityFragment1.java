@@ -16,6 +16,7 @@ public class MainActivityFragment1 extends Fragment {
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private ViewPagerAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

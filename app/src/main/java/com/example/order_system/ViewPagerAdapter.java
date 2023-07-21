@@ -11,12 +11,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     private static final int NUM_PAGES = 3;
     private Map<Integer, Fragment> fragmentMap = new HashMap<>();
+    List<Commodity2> mainCourseFoods = new ArrayList<>();
+    List<Commodity2> sideDishFoods = new ArrayList<>();
+    List<Commodity2> dessertFoods = new ArrayList<>();
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
@@ -29,11 +34,11 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
         if (fragment == null) {
             // 片段不存在創建新實例
             if (position == 0) {
-                fragment = new MainCourseFragment();
+                fragment = new NewFoodFragment(mainCourseFoods,"main_course");
             } else if (position == 1) {
-                fragment = new SideDishFragment();
+                fragment = new NewFoodFragment(sideDishFoods,"side_dish");
             } else if (position == 2) {
-                fragment = new DessertFragment();
+                fragment = new NewFoodFragment(dessertFoods,"dessert");
             }
 
             // 將片段保存到表中

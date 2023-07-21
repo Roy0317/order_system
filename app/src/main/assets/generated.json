@@ -4,47 +4,53 @@
     "sell": false,
     "count": 0,
     "type": "potato",
-    "genre": "MainFood",
-    "genreC": "主餐:"
+    "genre": "main_course",
+    "genreC": "主餐:",
+    "image": "https://png.pngtree.com/png-clipart/20210423/ourmid/pngtree-cute-cartoon-fries-png-image_3239693.jpg"
   },
   {
     "name": "雞塊",
     "sell": false,
     "count": 0,
     "type": "chicken",
-    "genre": "MainFood",
-    "genreC": "主餐:"
+    "genre": "main_course",
+    "genreC": "主餐:",
+    "image": "https://png.pngtree.com/png-vector/20201222/ourmid/pngtree-fried-food--foods--chicken-nuggets-png-image_2628580.jpg"
   },
   {
     "name": "洋蔥圈",
     "sell": false,
-    "count": 2,
+    "count": 0,
     "type": "onion",
-    "genre": "SideFood",
-    "genreC": "附餐:"
+    "genre": "side_dish",
+    "genreC": "附餐:",
+    "image": "https://burgerkingimage.azureedge.net/product/300106.png"
   },
   {
     "name": "甜甜圈",
     "sell": false,
-    "count": 1,
+    "count": 0,
     "type": "donut",
-    "genre": "SideFood",
-    "genreC": "附餐:"
+    "genre": "side_dish",
+    "genreC": "附餐:",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwW73z1Uy6jp3aKaglwlk7cKAAC2LoX9FIRQ&usqp=CAU"
   },
   {
     "name": "蛋塔",
     "sell": false,
-    "count": 3,
+    "count": 0,
     "type": "tart",
-    "genre": "Dessert",
-    "genreC": "點心:"
+    "genre": "dessert",
+    "genreC": "點心:",
+    "image": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/collage-1607069354.jpg?crop=0.495xw:0.990xh;0.505xw,0.00962xh&resize=640:*"
   },
   {
     "name": "甜筒",
     "sell": false,
     "count": 0,
     "type": "ice",
-    "genre": "Dessert",
-    "genreC": "點心:"
+    "genre": "dessert",
+    "genreC": "點心:",
+    "image": "https://www.duroyal.com.tw/images/product_kv_02.png"
   }
 ]
