@@ -1,5 +1,6 @@
 package com.example.order_system;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,22 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.CartVH> {
+
+    private List<Commodity2> commodity2;
     private Context context;
-    private List<Commodity2> filtercommodity2;//保存大於1的商品
 
-
-    //mvc mvp 設計模式
     public ShoppingCartAdapter(List<Commodity2> commodity2){
-        this.filtercommodity2=new ArrayList<>();
-        for(Commodity2 commodity:commodity2){
-            if (commodity.count>0){
-                filtercommodity2.add(commodity);
-            }
-        }
+        this.commodity2=commodity2;
     }
     @NonNull
     @Override
@@ -40,13 +34,13 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CartVH holder, int position) {
-        holder.textView.setText(filtercommodity2.get(position).genreC+filtercommodity2.get(position).name+"，數量:"+filtercommodity2.get(position).count);
-        Glide.with(context).load(filtercommodity2.get(position).image).into(holder.imageView);
+        holder.textView.setText(commodity2.get(position).genreC+commodity2.get(position).name+"數量 : "+commodity2.get(position).count);
+        Glide.with(context).load(commodity2.get(position).image).into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return filtercommodity2.size();
+        return commodity2.size();
     }
     public class CartVH extends RecyclerView.ViewHolder{
         TextView textView;

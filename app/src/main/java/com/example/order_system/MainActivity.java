@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityFragment2 fragment2;
     private AlertDialog dialog;
     private List<Commodity2> commodity2;
-    private List<Commodity2> commodity2car;
+    private List<Commodity2> commodity2car=new ArrayList<>();
     private CommodityUtil commodityUtil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,9 +138,17 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent=new Intent();
                 intent.setClass(MainActivity.this, ShoppingCart.class);
-                //傳送資料
                 String savedCommodityJson=commodityUtil.getAllCommodities();
-                intent.putExtra("cardata",savedCommodityJson);
+                commodity2car=DataParser.parseCommodityData(savedCommodityJson);
+                for (int i=0;i<commodity2car.size();i++){
+                    if (commodity2car.get(i).count==0){
+                        commodity2car.remove(i);
+                        i--;
+                    }
+                }
+                Log.d("Tgg", "onClick: "+commodity2car.size());
+                String commodityJsoncar = new Gson().toJson(commodity2car);
+                intent.putExtra("cardata",commodityJsoncar);
                 startActivity(intent);
 
             }
@@ -152,12 +162,12 @@ public class MainActivity extends AppCompatActivity {
             if(commodity2.get(i).type.equals(food)){
                 commodity2.get(i).count++;
                 //檢查是否超過3份
-
                 if (commodity2.get(i).count>3){
                     commodity2.get(i).setCount(mistake(commodity2.get(i).count));
                 }
             }
         }
+
         commodityUtil.saveAllCommodities(commodity2);//保存資料
         createDialog();
     }
@@ -184,6 +194,15 @@ public class MainActivity extends AppCompatActivity {
         String foodName = event.getFoodName();
         // 在这里处理接收到的值
         Log.d("MainActivity", "Received food name: " + foodName);
+    }
+
+    private Commodity2 findCommodity2InCar(Commodity2 item) {
+        for (Commodity2 carItem : commodity2car) {
+            if (carItem.getName().equals(item.getName())) {
+                return carItem;
+            }
+        }
+        return null;
     }
 
 }

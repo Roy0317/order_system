@@ -38,8 +38,6 @@ public class MainActivityFragment2 extends Fragment {
             textViews[i]=view.findViewById(textViewIds[i]);
         }
 
-
-
         if(savedCommodityJson!=null){
             //若有資料被儲存 把資料傳回給commodity2 並判斷有沒有被上架
             commodity2 =DataParser.parseCommodityData(savedCommodityJson);
