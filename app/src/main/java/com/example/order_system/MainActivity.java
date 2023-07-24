@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityFragment2 fragment2;
     private AlertDialog dialog;
     private List<Commodity2> commodity2;
-    private List<Commodity2> commodity2car=new ArrayList<>();
+    private List<Commodity2> commodity2car=new ArrayList<>(); //要傳給購物車的list
     private CommodityUtil commodityUtil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                         i--;
                     }
                 }
-                Log.d("Tgg", "onClick: "+commodity2car.size());
                 String commodityJsoncar = new Gson().toJson(commodity2car);
                 intent.putExtra("cardata",commodityJsoncar);
                 startActivity(intent);
@@ -194,15 +193,6 @@ public class MainActivity extends AppCompatActivity {
         String foodName = event.getFoodName();
         // 在这里处理接收到的值
         Log.d("MainActivity", "Received food name: " + foodName);
-    }
-
-    private Commodity2 findCommodity2InCar(Commodity2 item) {
-        for (Commodity2 carItem : commodity2car) {
-            if (carItem.getName().equals(item.getName())) {
-                return carItem;
-            }
-        }
-        return null;
     }
 
 }
