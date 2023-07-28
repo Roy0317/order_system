@@ -15,9 +15,9 @@ public class CommodityUtil {
     //singleton 模式
     //java 回收機制
     //memory leak
-    //mvc mvp
+    //mvc    mvp    mvvm
     //database 導入 (room)
-
+    //bindview
     private static CommodityUtil instance;
     private Context mContext;
     private SharedPreferences sharedPreferences;

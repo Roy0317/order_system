@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.order_system.databinding.FragmentMainCourseBinding;
+import com.example.order_system.databinding.ItemFoodBinding;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +35,7 @@ public class NewFoodFragment extends Fragment {
     private List<String> foodName;
     private FoodAdapter foodAdapter;
     private CommodityUtil commodityUtil;
+    private FragmentMainCourseBinding binding;
     public NewFoodFragment(List<Commodity2> allFoods, String type){
         this.foods=allFoods;
         this.fragmentType=type;
@@ -69,14 +72,14 @@ public class NewFoodFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        int layoutResId = R.layout.fragment_main_course;
+        binding = FragmentMainCourseBinding.inflate(inflater, container, false);
 
         //讀取sharepreferences的資料
         commodityUtil = CommodityUtil.getInstance(requireContext());//初始化sharedpreferences
         List<String> savedFoodNames = commodityUtil.getFoodName(); // 讀取點擊過的食物
         foodName.addAll(savedFoodNames);
 
-        return inflater.inflate(layoutResId, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -85,8 +88,7 @@ public class NewFoodFragment extends Fragment {
         //json獲取資料
         foods = new JsonHelper().jsonget(getActivity().getApplication());
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
+        binding.recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
 
         List<Commodity2> filteredFoods = new ArrayList<>();
         for (Commodity2 food : foods) {
@@ -96,7 +98,7 @@ public class NewFoodFragment extends Fragment {
         }
 
         foodAdapter = new FoodAdapter(filteredFoods,foodName);
-        recyclerView.setAdapter(foodAdapter);
+        binding.recyclerView.setAdapter(foodAdapter);
     }
 
 
@@ -136,29 +138,23 @@ public class NewFoodFragment extends Fragment {
 //顯示每一個食物
     public class FoodVH extends RecyclerView.ViewHolder{
 
-        private ImageView imageFood;
-        private TextView textFood;
-        private TextView textCart;
-
+        private ItemFoodBinding binding;
         public FoodVH(View view){
             super(view);
-            imageFood = view.findViewById(R.id.imageFood);
-            textFood = view.findViewById(R.id.textFood);
-            textCart = view.findViewById(R.id.textCart);
+            binding=ItemFoodBinding.bind(view);
         }
-
         public void bindView(Commodity2 commodity2, List<String> foodName) {
-            textCart.setOnClickListener(view -> onFoodClicked(commodity2));
+            binding.textCart.setOnClickListener(view -> onFoodClicked(commodity2));
             if (foodName == null || foodName.isEmpty() || !foodName.contains(commodity2.getType())) { // 檢察食物list是否為空
-                imageFood.setImageResource(R.drawable.def);
-                textFood.setText("");
-                textCart.setText("");
-                textCart.setBackgroundColor(Color.WHITE);
+                binding.imageFood.setImageResource(R.drawable.def);
+                binding.textFood.setText("");
+                binding.textCart.setText("");
+                binding.textCart.setBackgroundColor(Color.WHITE);
             } else {
-                textCart.setText("放入購物車");
-                textCart.setBackgroundColor(Color.GRAY);
-                Glide.with(itemView.getContext()).load(commodity2.getImage()).into(imageFood);
-                textFood.setText(commodity2.getName());
+                binding.textCart.setText("放入購物車");
+                binding.textCart.setBackgroundColor(Color.GRAY);
+                Glide.with(itemView.getContext()).load(commodity2.getImage()).into(binding.imageFood);
+                binding.textFood.setText(commodity2.getName());
             }
         }
         //點擊事件

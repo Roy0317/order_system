@@ -1,17 +1,5 @@
 package com.example.order_system;
 
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
 public class Commodity2 {
     String name;
     Boolean sell;
@@ -70,5 +58,6 @@ public class Commodity2 {
     public String getImage(){
         return image;
     }
+
 }
 

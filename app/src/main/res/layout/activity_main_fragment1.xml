@@ -7,26 +7,21 @@
     >
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabitem1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="主餐" />
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabitem2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="附餐" />
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabitem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="點心" />
@@ -35,11 +30,9 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
-        android:layout_width="409dp"
-        android:layout_height="841dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tablayout" />

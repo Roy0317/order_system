@@ -9,25 +9,23 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.order_system.databinding.ActivityMainFragment1Binding;
+import com.example.order_system.databinding.FragmentMainCourseBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivityFragment1 extends Fragment {
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager;
     private ViewPagerAdapter adapter;
-
+    private ActivityMainFragment1Binding binding;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main_fragment1, container, false);
+        binding=ActivityMainFragment1Binding.inflate(inflater,container,false);
 
-        tabLayout=view.findViewById(R.id.tablayout);
-        viewPager=view.findViewById(R.id.viewpager);
         adapter = new ViewPagerAdapter(getActivity());
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.setAdapter(adapter);
-        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager,
+        binding.viewpager.setOffscreenPageLimit(3);
+        binding.viewpager.setAdapter(adapter);
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(binding.tablayout, binding.viewpager,
                 (tab, position) -> {
                     // 在這裡設置每個 Tab 的標題
                     if (position == 0) {
@@ -40,6 +38,6 @@ public class MainActivityFragment1 extends Fragment {
                 });
         tabLayoutMediator.attach();
 
-        return view;
+        return binding.getRoot();
     }
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.order_system.databinding.ActivityMainFragment2Binding;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,10 +23,11 @@ import java.util.List;
 public class MainActivityFragment2 extends Fragment {
     private List<Commodity2> commodity2;
     private CommodityUtil commodityUtil;
+    private ActivityMainFragment2Binding binding;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main_fragment2, container, false);
+        binding = ActivityMainFragment2Binding.inflate(inflater,container,false);
         TextView[] textViews = new TextView[6];
         int[] textViewIds = {R.id.text1, R.id.text2, R.id.text3, R.id.text4, R.id.text5, R.id.text6};
         commodityUtil = CommodityUtil.getInstance(requireActivity().getApplication());//初始化sharedpreferences
@@ -35,8 +37,10 @@ public class MainActivityFragment2 extends Fragment {
         String savedCommodityJson=commodityUtil.getAllCommodities(); //讀取儲存的資料
 
         for (int i=0;i<commodity2.size();i++){
-            textViews[i]=view.findViewById(textViewIds[i]);
+            textViews[i]=binding.getRoot().findViewById(textViewIds[i]);
         }
+
+
 
         if(savedCommodityJson!=null){
             //若有資料被儲存 把資料傳回給commodity2 並判斷有沒有被上架
@@ -55,7 +59,7 @@ public class MainActivityFragment2 extends Fragment {
         for (int i=0;i<commodity2.size();i++){
             up(textViews,i);
         }
-        return view;
+        return binding.getRoot();
     }
 
     private void handleFoodClick(String foodName,TextView textView){

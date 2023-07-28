@@ -12,43 +12,46 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.order_system.databinding.CartItemBinding;
 
 import java.util.List;
 
 public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.CartVH> {
 
-    private List<Commodity2> commodity2;
+    private List<CommodityEntity> commodityEntities;
     private Context context;
-
-    public ShoppingCartAdapter(List<Commodity2> commodity2){
-        this.commodity2=commodity2;
+    public void updateData(List<CommodityEntity> newData) {
+        commodityEntities = newData;
+        notifyDataSetChanged();//通知更新
+    }
+    public ShoppingCartAdapter(List<CommodityEntity> commodityEntities) {
+        this.commodityEntities = commodityEntities;
     }
     @NonNull
     @Override
     public CartVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context=parent.getContext();
+        context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cart_item,parent,false);
+                .inflate(R.layout.cart_item, parent, false);
         return new CartVH(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CartVH holder, int position) {
-        holder.textView.setText(commodity2.get(position).genreC+commodity2.get(position).name+"數量 : "+commodity2.get(position).count);
-        Glide.with(context).load(commodity2.get(position).image).into(holder.imageView);
+        holder.binding.textFood.setText(commodityEntities.get(position).getGenreC() + commodityEntities.get(position).getName() + "數量 : " + commodityEntities.get(position).getCount());
+        Glide.with(context).load(commodityEntities.get(position).getImage()).into(holder.binding.imageFood);
     }
 
     @Override
     public int getItemCount() {
-        return commodity2.size();
+        return commodityEntities.size();
     }
-    public class CartVH extends RecyclerView.ViewHolder{
-        TextView textView;
-        ImageView imageView;
-        public CartVH(@NonNull View itemView){
+
+    public class CartVH extends RecyclerView.ViewHolder {
+        private CartItemBinding binding;
+        public CartVH(@NonNull View itemView) {
             super(itemView);
-            textView=itemView.findViewById(R.id.textFood);
-            imageView=itemView.findViewById(R.id.imageFood);
+            binding=CartItemBinding.bind(itemView);
         }
     }
 }

@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,37 +20,49 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.order_system.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import kotlinx.coroutines.GlobalScope;
+
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityMainBinding binding;
     private MainActivityFragment1 fragment1;
     private MainActivityFragment2 fragment2;
     private AlertDialog dialog;
     private List<Commodity2> commodity2;
     private List<Commodity2> commodity2car=new ArrayList<>(); //要傳給購物車的list
     private CommodityUtil commodityUtil;
+    private CommodityDao commodityDao;
+    private List<CommodityEntity> commodityEntities;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         EventBus.getDefault().register(this);
 
         commodityUtil = CommodityUtil.getInstance(getApplicationContext());//初始化sharedpreferences
 
-        setContentView(R.layout.activity_main);
-        ImageButton imageButton1 = findViewById(R.id.imagebutton1);
-        ImageButton imageButton2 = findViewById(R.id.imagebutton2);
-        ImageView shoppingcart = findViewById(R.id.imageView);
+        //初始化資料庫
+        CommodityDatabase commodityDatabase = CommodityDatabase.getInstance(getApplicationContext());
+        commodityDao = commodityDatabase.commodityDao();
 
-
-        imageButton1.setColorFilter(Color.RED);
+        binding.imagebutton1.setColorFilter(Color.RED);
         fragment1 = new MainActivityFragment1();
         fragment2 = new MainActivityFragment2();
 
@@ -80,16 +93,16 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener clickListener=new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                imageButton1.setColorFilter(null);
-                imageButton2.setColorFilter(null);
-                if(view==imageButton1){
-                    imageButton1.setColorFilter(Color.RED);
+                binding.imagebutton1.setColorFilter(null);
+                binding.imagebutton2.setColorFilter(null);
+                if(view==binding.imagebutton1){
+                    binding.imagebutton1.setColorFilter(Color.RED);
                     FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                     fragmentTransaction.show(fragment1);
                     fragmentTransaction.hide(fragment2);
                     fragmentTransaction.commit();
                 }else{
-                    imageButton2.setColorFilter(Color.RED);
+                    binding.imagebutton2.setColorFilter(Color.RED);
                     FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
                     fragmentTransaction.hide(fragment1);
                     fragmentTransaction.show(fragment2);
@@ -97,10 +110,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        imageButton1.setOnClickListener(clickListener);
-        imageButton2.setOnClickListener(clickListener);
+        binding.imagebutton1.setOnClickListener(clickListener);
+        binding.imagebutton2.setOnClickListener(clickListener);
 
-        shoppingcart.setOnClickListener(new View.OnClickListener() {
+        commodityEntities = new ArrayList<>();//初始化資料表
+        refreshUIWithDatabaseData();//更新資料進commodityEntities
+
+        binding.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (dialog != null) {
@@ -160,14 +176,26 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0;i<commodity2.size();i++) {
             if(commodity2.get(i).type.equals(food)){
                 commodity2.get(i).count++;
+
                 //檢查是否超過3份
                 if (commodity2.get(i).count>3){
                     commodity2.get(i).setCount(mistake(commodity2.get(i).count));
                 }
+
+                //更新資料庫裡的count
+                int count = commodityEntities.get(i).getCount() + 1;
+                if(commodityEntities.get(i).getCount()<3){
+                    commodityEntities.get(i).setCount(count);
+                }
             }
         }
-
         commodityUtil.saveAllCommodities(commodity2);//保存資料
+
+        //更新資料
+        new UpdateCommoditiesAsyncTask().execute(commodityEntities.toArray(new CommodityEntity[0]));
+
+        // 更新UI：重新讀取資料庫的資料並更新UI
+        refreshUIWithDatabaseData();
         createDialog();
     }
 
@@ -194,5 +222,28 @@ public class MainActivity extends AppCompatActivity {
         // 在这里处理接收到的值
         Log.d("MainActivity", "Received food name: " + foodName);
     }
+    private class UpdateCommoditiesAsyncTask extends AsyncTask<CommodityEntity, Void, Void> {
+        @Override
+        protected Void doInBackground(CommodityEntity... commodityEntities) {
+            commodityDao.updateCommodity(commodityEntities);
+            return null;
+        }
+    }
+    private void refreshUIWithDatabaseData() {
+        new LoadCommoditiesAsyncTask().execute();
+    }
 
+    private class LoadCommoditiesAsyncTask extends AsyncTask<Void, Void, List<CommodityEntity>> {
+        @Override
+        protected List<CommodityEntity> doInBackground(Void... voids) {
+            return commodityDao.getAllCommodities();
+        }
+
+        @Override
+        protected void onPostExecute(List<CommodityEntity> result) {
+            super.onPostExecute(result);
+            commodityEntities = result;
+        }
+
+    }
 }
